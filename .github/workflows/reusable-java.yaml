@@ -10,4 +10,4 @@ on:
 
 jobs:
   build:
-    uses: mevijays/java-test/.github/workflows/java.yaml@main
+    uses: mevijays/java-test/.github/workflows/java.yaml@main # correct path
