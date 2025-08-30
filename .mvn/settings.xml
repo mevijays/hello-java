@@ -15,4 +15,11 @@
       <password>${env.ART_PASS}</password>
     </server>
   </servers>
+  <mirrors>
+    <mirror>
+      <id>central-proxy</id>
+      <mirrorOf>central</mirrorOf>
+      <url>http://192.168.1.200:8081/repository/maven-central/</url>
+    </mirror>
+  </mirrors>
 </settings>
