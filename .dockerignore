@@ -1,8 +1,5 @@
 # .dockerignore
 
-# Ignore Maven target directory
-target/
-
 # Ignore Maven local repository
 .m2/
 
