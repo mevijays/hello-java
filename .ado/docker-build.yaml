@@ -1,0 +1,52 @@
+trigger: 
+ - none
+
+pool:
+  vmImage: ubuntu-latest
+parameters:
+  - name: relVersion
+    type: string
+    default: '1.0.0-SNAPSHOT'
+jobs:
+  - job: mavenBuild
+    steps:
+      - task: MavenAuthenticate@0
+        inputs:
+          artifactsFeeds: 'mevijays'
+        displayName:  maven authentication for mevijays
+      - task: Maven@4
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'clean test deploy'
+          options: '-gs .mvn/settings.xml'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          codeCoverageToolOption: 'JaCoCo'
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+        displayName: maven build
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/target'
+          artifact: 'maven-drop'
+          publishLocation: 'pipeline'
+        displayName: upload target
+  - job: DockerPush
+    dependsOn: mavenBuild
+    condition: succeeded()
+    steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'maven-drop'
+          targetPath: '$(System.DefaultWorkingDirectory)/target'
+        displayName: download maven target
+      - script: |
+          ls -lhtr target
+        displayName: display the artifact dir
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'gitreg'
+          repository: 'mevijays/hello-java'
+          command: 'buildAndPush'
+          Dockerfile: '**/Dockerfile'
