@@ -5,7 +5,7 @@ FROM openjdk:17-alpine
 WORKDIR /app
 
 # Copy the JAR file into the /app directory
-COPY hello-world-1.0.0-SNAPSHOT.jar /app/hello-world.jar
+COPY hello-world-*.jar /app/hello-world.jar
 
 # Set the entrypoint to run the JAR file
 ENTRYPOINT ["java", "-jar", "/app/hello-world.jar"]
