@@ -4,6 +4,7 @@ permissions:
   id-token: write
   contents: read
   packages: write
+  pull-requests: write
 
 on:
   workflow_dispatch:
@@ -47,6 +48,17 @@ jobs:
           mvn clean test package deploy \
             -s .mvn/settings.xml \
             -Dproject.version=${{ inputs.version }}
+
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.1
+        with:
+          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 60
+          title: Code Coverage
+          update-comment: true
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
