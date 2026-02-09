@@ -59,6 +59,7 @@ jobs:
           min-coverage-changed-files: 60
           title: Code Coverage
           update-comment: true
+          comment-type: summary
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
