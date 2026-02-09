@@ -49,17 +49,19 @@ jobs:
             -s .mvn/settings.xml \
             -Dproject.version=${{ inputs.version }}
 
-      - name: Add coverage to PR
+      - name: Generate JaCoCo Summary
         id: jacoco
-        uses: PavanMudigonda/jacoco-reporter@v5.0
+        uses: madrapps/jacoco-report@v1.7.1
         with:
-          coverage_results_path: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
-          coverage_report_title: Code Coverage
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: false
-          minimum_coverage: 40
-          fail_below_threshold: false
-          publish_only_summary: false
+          # Path to the xml report
+          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80
+          min-coverage-changed-files: 60
+          title: 'Code Coverage Report'
+          update-comment: true
+          # This specifically pushes the table to the Job Summary page
+          comment-type: summary
 
 
       - name: Upload JAR artifact
