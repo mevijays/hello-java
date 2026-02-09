@@ -48,20 +48,16 @@ jobs:
           mvn clean test package deploy \
             -s .mvn/settings.xml \
             -Dproject.version=${{ inputs.version }}
-
       - name: Generate JaCoCo Summary
-        id: jacoco
+        if: github.event_name != 'workflow_dispatch' # Prevents the "Event not supported" error
         uses: madrapps/jacoco-report@v1.7.1
         with:
-          # Path to the xml report
           paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80
           min-coverage-changed-files: 60
           title: 'Code Coverage Report'
           update-comment: true
-          # This specifically pushes the table to the Job Summary page
-          comment-type: summary
 
 
       - name: Upload JAR artifact
