@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
 @SpringBootTest
 class HelloWorldApplicationTests {
 
@@ -18,6 +17,11 @@ class HelloWorldApplicationTests {
     void contextLoads() {
         // to ensure that controller is getting created inside the application context
         assertNotNull(helloWorldController);
+    }
+
+    @Test
+    void main() {
+        HelloWorldApplication.main(new String[] {});
     }
 
 }
